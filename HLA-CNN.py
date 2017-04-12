@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from collections import OrderedDict
 import pickle
+import time
 
 from sklearn.utils import shuffle
 from sklearn.metrics import roc_auc_score, roc_curve, auc
@@ -18,6 +19,8 @@ from keras.optimizers import SGD, Adam, RMSprop
 from keras.callbacks import EarlyStopping 
 
 #np.random.seed(100)  # for reproducibility
+
+start = time.time()
 
 def build_training_matrix(peptide, peptide_n_mer):
 
@@ -61,6 +64,7 @@ def build_test_matrix(peptide, peptide_n_mer, test_measurement, iedb_ref):
              
         test_df = pd.read_csv(peptide_file, delim_whitespace=True)
         test_peptide = test_df.Peptide_seq
+        trueY = test_df['Measurement_value']
         test_df['Measurement_value'] = np.where(test_df.Measurement_value == 1.0, 1, 0) 
     else:
         peptide_dict = {'A*02:01-9': 'test_A0201_9mer',
@@ -77,11 +81,12 @@ def build_test_matrix(peptide, peptide_n_mer, test_measurement, iedb_ref):
         peptide_file = peptide_dict[pep_key]
         test_df = pd.read_csv(peptide_file, delim_whitespace=True)
         test_peptide = test_df.Peptide_seq
+        trueY = -test_df['Measurement_value']
         test_df['Measurement_value'] = np.where(test_df.Measurement_value < 500.0, 1, 0) 
         
     test_target = test_df.Measurement_value
     test_target = test_target.as_matrix()
-    return test_peptide, test_target
+    return test_peptide, test_target, trueY
     
 
 # Build up the amino acid embedding and put into dataframe format
@@ -118,16 +123,16 @@ def aa_integerMapping(peptideSeq):
 
 
 ''' ******************* user input here **************************** ''' 
-peptide = 'A*02:02'
-peptide_n_mer = 9
+peptide = 'A*02:03'
+peptide_n_mer = 10
 seqMatrix, targetMatrix = build_training_matrix(peptide, peptide_n_mer)
 
 test_measurement = 'ic50'  # can be either 'binary' or 'ic50'
 # this variable is only required by A*02:01 allele with 9-mers as
 # there are two test dataset with this specification, thus need to specify
 # which test
-iedb_ref = '1029824'
-test_peptide, test_target = build_test_matrix(peptide, peptide_n_mer, test_measurement, iedb_ref)
+iedb_ref = '1028928'
+test_peptide, test_target, trueY = build_test_matrix(peptide, peptide_n_mer, test_measurement, iedb_ref)
 
 ''' **************************************************************** '''
  
@@ -216,6 +221,8 @@ mean_fpr, mean_tpr, mean_thresholds = roc_curve(Y_test, predScoresAvg, pos_label
 mean_auc = auc(mean_fpr, mean_tpr)
 
 # final prediction is based on average score of 5 predictions
-rho, pValue = stats.spearmanr(Y_test, predScoresAvg>=.5)
+rho, pValue = stats.spearmanr(trueY, predScoresAvg)
 print('polling avg srcc: ', rho)
 print('avg auc: ', mean_auc)
+
+print('The script took {0} second !'.format(time.time() - start))
