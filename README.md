@@ -14,9 +14,9 @@ Amino acid embedding and Convolutional Neural Network for HLA Class I-peptide bi
 
 
 
-MIT License
+#MIT License
 
-Copyright (c) [2017] [fullname]
+Copyright (c) [2017] Yeeleng Scott Vang
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
