@@ -168,7 +168,7 @@ def train(params, dirnames):
     datasets, peptide_n_mer = read_in_datasets(dirnames)
 
     # CNN parameters
-    batch_size = np.ceil(len(datasets['X_train']) / 100.0)  # variable batch size depending on number of data points
+    batch_size = int(np.ceil(len(datasets['X_train']) / 100.0))  # variable batch size depending on number of data points
     epochs = int(params['epochs'])
     nb_filter = int(params['filter_size'])
     filter_length = int(params['filter_length'])
