@@ -1,8 +1,6 @@
 HLA-CNN and HLA-Vec
 =========================
-__Author__: Yeeleng Scott Vang, ysvang@uci.edu
-
-Paper accompanying the code can be found at https://doi.org/10.1093/bioinformatics/btx264
+__Author__: ysvang@uci.edu
 
 __Usage:__ python main.py config.ini 
 
@@ -37,3 +35,5 @@ __Requirements__:
 - keras 2.0.6
 - theano 0.9.0
 
+__Reference__:
+Vang, Y. S. and Xie, X. (2017) HLA class I binding prediction via convolutional neural networks. https://doi.org/10.1093/bioinformatics/btx264
