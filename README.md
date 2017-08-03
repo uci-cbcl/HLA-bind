@@ -1,6 +1,7 @@
 HLA-CNN and HLA-Vec
 =========================
 __Author__: Yeeleng Scott Vang, ysvang@uci.edu
+
 Paper accompanying the code can be found at https://doi.org/10.1093/bioinformatics/btx264
 
 __Usage:__ python main.py config.ini 
